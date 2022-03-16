@@ -3,7 +3,12 @@ project:
     version: "0.0.1-SNAPSHOT"
     name: "Managed Account Service"
     description: "Managed Account Service holds the collection of all investor accounts into a single unit. It reflects the grouped view of all the accounts against an investor. This service is used to manage household. All APIs for creating household and creating accounts under the household are exposed in this service. APIs are exposed to fetch household and account details."
-    
+
+spring:
+  datasource:
+    url: jdbc:postgresql://pg4ms-postgresql.argocd.svc.cluster.local:5432/postgress
+    username: postgres
+    password: AMeWM30DataOps
     
 account:
   details:
