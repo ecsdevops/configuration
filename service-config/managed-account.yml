@@ -1,0 +1,32 @@
+project:
+  info:
+    version: "0.0.1-SNAPSHOT"
+    name: "Managed Account Service"
+    description: "Managed Account Service holds the collection of all investor accounts into a single unit. It reflects the grouped view of all the accounts against an investor. This service is used to manage household. All APIs for creating household and creating accounts under the household are exposed in this service. APIs are exposed to fetch household and account details."
+    
+    
+account:
+  details:
+    custodians:
+      - id: 1
+        name: AssetMark Trust
+        description: AssetMark Trust
+        order: 1
+      - id: 2
+        name: Fidelity
+        description: Fidelity
+        order: 2
+      - id: 3
+        name: Pershing
+        description: Pershing
+        order: 3
+      - id: 4
+        name: TD Ameritrade
+        description: TD Ameritrade
+        order: 4
+      - id: 5
+        name: Schwab
+        description: Charles Schwab
+        order: 5
+custodial-service:
+  url: http://custodian-account/custodian-account/api/v1/accounts/{id}

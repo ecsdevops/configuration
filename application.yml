@@ -1,0 +1,172 @@
+company:
+  contact:
+    name: "AssetMark"
+    url: "https://www.assetmark.com/"
+    email: "eservice@assetmark.com"
+  license: "© 2022 Copyright AssetMark, Inc. All rights reserved."
+  termsOfService:
+    url: "https://www.assetmark.com/terms-and-conditions?hsLang=en"
+    
+######### LOG CONFIG ############    
+logging:
+  level:
+    ROOT: ERROR
+    org:
+      springframework.web: ERROR
+      hibernate:
+        type.descriptor.sql: INFO
+        SQL: DEBUG         
+      apache:
+        kafka: ERROR
+    com:
+      assetmark: INFO
+   
+spring:
+  main.banner-mode: "off"
+  output.ansi.enabled: ALWAYS
+  zipkin:
+    base-url: http://zipkin-service:9411
+    enabled: true
+    sender.type: web
+    locator:
+      discovery:
+        enabled: true
+  sleuth:
+    enabled: true
+    sampler:
+      probability: 1.0
+  date-time:
+    format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    zone: UTC    
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSZ
+    default-property-inclusion: NON_NULL
+    time-zone: UTC
+  lifecycle:
+    timeout-per-shutdown-phase: 1m
+    
+  cloud:
+    kubernetes:
+      enabled: false
+      discovery.enabled: false      
+      
+  ################### Hibernate Configuration ##########################
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL81Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          fetch_size: 100
+          batch_size: 10
+          batch_versioned_data: true
+        format_sql: true
+        order_inserts: true
+        order_updates: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    open-in-view: false
+
+###### EUREKA CONFIG #######
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: discovery-service
+    metadataMap:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/actuator/prometheus"
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://discovery-server:9010/eureka}
+      
+######### ACTUATOR CONFIG ##########      
+management:
+  info.git.mode: full
+  endpoints:
+    web:
+      exposure:
+        include: 
+          ['configprops', 'env', 'gateway', 'health', 'info', 'logfile', 'loggers', 'prometheus', 'threaddump']
+  endpoint:
+    info:
+      enabled: true
+    shutdown:
+      enabled: false
+    restart:
+      enabled: true 
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  health:
+    probes:
+      enabled: true
+    binders:
+      enabled: true
+    redis:
+      enabled: true
+    mongo:
+      enabled: true
+  metrics:
+    export:
+      # Prometheus is the default metrics backend
+      prometheus:
+        enabled: true
+        step: 60
+    enable:
+      http: true
+      jvm: true
+      logback: true
+      process: true
+      system: true
+    distribution:
+      percentiles-histogram:
+        all: true
+      percentiles:
+        all: 0, 0.5, 0.75, 0.95, 0.99, 1.0
+    tags:
+      application: ${spring.application.name}
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true
+server:
+  shutdown:
+    GRACEFUL
+    
+###### API DOC  ########    
+springdoc:
+  version: '@springdoc.version@'
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs.html
+    displayRequestDuration: true
+    tagsSorter: alpha
+    display-query-params-without-oauth2: true
+  cache:
+    disabled: true
+  oAuthFlow:
+    authorizationUrl: http://192.168.45.24:8089/auth/realms/Assetmark/protocol/openid-connect/auth
+    tokenUrl: http://192.168.45.24:8089/auth/realms/Assetmark/protocol/openid-connect/token
+    use-pkce-with-authorization-code-grant: false
+    
+# ---
+# spring:
+#   config:
+#     activate:
+#       on-cloud-platform: kubernetes
+#   cloud:
+#     kubernetes:
+#       enabled: true
+
+# eureka:
+#   client:
+#     enabled: false
