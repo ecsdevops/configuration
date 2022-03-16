@@ -6,7 +6,7 @@ project:
 
 spring:
   datasource:
-    url: jdbc:postgresql://pg4ms-postgresql.argocd.svc.cluster.local:5432/postgress
+    url: jdbc:postgresql://pg4ms-postgresql.argocd.svc.cluster.local:5432/postgres
     username: postgres
     password: AMeWM30DataOps
     
