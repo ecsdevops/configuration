@@ -6,32 +6,9 @@ project:
 
 spring:
   datasource:
-    url: jdbc:postgresql://pg4ms-postgresql.argocd.svc.cluster.local:5432/postgres
-    username: postgres
-    password: AMeWM30DataOps
+    url: jdbc:postgresql://${DB_URI}:5432/household_db
+    username: ${DB_USER:user}
+    password: ${DB_USER_PASSWD:password}
     
-account:
-  details:
-    custodians:
-      - id: 1
-        name: AssetMark Trust
-        description: AssetMark Trust
-        order: 1
-      - id: 2
-        name: Fidelity
-        description: Fidelity
-        order: 2
-      - id: 3
-        name: Pershing
-        description: Pershing
-        order: 3
-      - id: 4
-        name: TD Ameritrade
-        description: TD Ameritrade
-        order: 4
-      - id: 5
-        name: Schwab
-        description: Charles Schwab
-        order: 5
 custodial-service:
   url: http://custodian-account/custodian-account/api/v1/accounts/{id}
