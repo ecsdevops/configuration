@@ -26,13 +26,13 @@ spring:
   output.ansi.enabled: ALWAYS
   zipkin:
     base-url: http://zipkin-service:9411
-    enabled: false
+    enabled: true
     sender.type: web
     locator:
       discovery:
-        enabled: false
+        enabled: true
   sleuth:
-    enabled: false
+    enabled: true
     sampler:
       probability: 1.0
   date-time:
@@ -44,11 +44,24 @@ spring:
     time-zone: UTC
   lifecycle:
     timeout-per-shutdown-phase: 1m
-    
+  ###################  Spring cloud config server  ################### 
+#   config:
+#     import: "optional:configserver:"
   cloud:
+    config:
+    #   discovery:
+    #     serviceId: config-server
+    #     enabled: true
+      uri: http://config-server
+      fail-fast: true
+      retry:
+        initial-interval: 1000
+        max-attempts: 100
+        max-interval: 2000
     kubernetes:
       enabled: false
       discovery.enabled: false
+  ################### Cloud Stream kafka config ################### 
     stream:
       kafka:
         streams:
@@ -60,7 +73,7 @@ spring:
                 value:
                   serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         binder:
-          brokers: ${KAFKA_URI}    #:192.168.75.98:29092
+          brokers: 192.168.75.98:29092
           headers: type
         #   replicationFactor: 3
           requiredAcks: all
@@ -95,7 +108,7 @@ spring:
         producer:
         #   partitioned: true
         #   partitionKeyExpression: headers['traceId']
-          errorChannelEnabled: true
+          errorChannelEnabled: false
           headerMode: headers
         consumer:
           partitioned: true
@@ -125,20 +138,61 @@ spring:
     show-sql: false
     generate-ddl: true
     open-in-view: false
+    
+  ################### HikariCP Configuration ##########################
+  datasource:
+    hikari:
+      minimumIdle: 5
+      maximumPoolSize: 20
+      idleTimeout: 30000
+      maxLifetime: 2000000
+      connectionTimeout: 30000
+      
+  ############## OAuth2 Security Config ##############    
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_REALM_URI}
+          jwk-set-uri: ${KEYCLOAK_REALM_URI}/protocol/openid-connect/certs
+      client:
+        provider:
+          oidc:
+            issuer-uri: ${KEYCLOAK_REALM_URI}
+        registration:
+          oidc:
+            client-id: ${KEYCLOAK_CLIENT_ID}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+            scope: openid
+---            
+spring.flyway:
+  enabled: true
+  locations: classpath:db/migration/postgresql
+  baseline-on-migrate: true            
 
-###### EUREKA CONFIG #######
+############## EUREKA CONFIG ################
 eureka:
-  instance:
-    preferIpAddress: true
-    hostname: discovery-service
-    metadataMap:
-      "prometheus.scrape": "true"
-      "prometheus.path": "/actuator/prometheus"
   client:
-    register-with-eureka: true
+    healthcheck:
+      enabled: true
     fetch-registry: true
+    register-with-eureka: true
+    instance-info-replication-interval-seconds: 10
+    registry-fetch-interval-seconds: 10
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://discovery-server:9010/eureka}
+  instance:
+    preferIpAddress: true
+    hostname: discovery-service    
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    metadata-map:
+      zone: primary # This is needed for the load balancer
+      profile: ${spring.profiles.active}
+      version: #project.version#
+      context-path: ${server.servlet.context-path:}
+      "prometheus.scrape": "true"
+      "prometheus.path": "/actuator/prometheus"
       
 ######### ACTUATOR CONFIG ##########      
 management:
@@ -147,7 +201,7 @@ management:
     web:
       exposure:
         include: 
-          ['configprops', 'env', 'gateway', 'health', 'info', 'logfile', 'loggers', 'prometheus', 'threaddump']
+          ['configprops', 'env', 'gateway', 'health', 'info', 'logfile', 'loggers', 'prometheus', 'threaddump', 'bindings']
   endpoint:
     info:
       enabled: true
@@ -165,8 +219,6 @@ management:
     binders:
       enabled: true
     redis:
-      enabled: true
-    mongo:
       enabled: true
   metrics:
     export:
@@ -206,14 +258,14 @@ springdoc:
     path: /docs.html
     displayRequestDuration: true
     tagsSorter: alpha
+    operationsSorter: method
     display-query-params-without-oauth2: true
   cache:
     disabled: true
   oAuthFlow:
-    authorizationUrl: http://20.75.210.122/auth/realms/assetmark-dev/protocol/openid-connect/auth
-    tokenUrl: http://20.75.210.122/auth/realms/assetmark-dev/protocol/openid-connect/token
+    authorizationUrl: ${KEYCLOAK_REALM_URI}/protocol/openid-connect/auth
+    tokenUrl: ${KEYCLOAK_REALM_URI}/protocol/openid-connect/token
     use-pkce-with-authorization-code-grant: false
-    
     
 ---
 ###### Custodian Details ########    
@@ -240,16 +292,3 @@ account:
         name: Schwab
         description: Charles Schwab
         order: 5
-    
-# ---
-# spring:
-#   config:
-#     activate:
-#       on-cloud-platform: kubernetes
-#   cloud:
-#     kubernetes:
-#       enabled: true
-
-# eureka:
-#   client:
-#     enabled: false
