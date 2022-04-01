@@ -5,10 +5,50 @@ project:
     description: "Managed Account Service holds the collection of all investor accounts into a single unit. It reflects the grouped view of all the accounts against an investor. This service is used to manage household. All APIs for creating household and creating accounts under the household are exposed in this service. APIs are exposed to fetch household and account details."
 
 spring:
+  cloud.stream:
+    function:
+      definition: accountSupplier;custodianFailureEventConsumer;custodianEventConsumer
+    kafka:
+      binder:
+        brokers: 192.168.75.98:29092
+    bindings:
+      accountSupplier-out-0:
+        destination: household.events
+        producer:
+          partition-count: 4
+        useNativeEncoding: true
+#      contentType: text/plain
+      custodianEventConsumer-in-0:
+        destination: custodian.events
+        group: "${spring.application.name}"
+        useNativeDecoding: true
+      custodianFailureEventConsumer-in-0:
+        destination: custodian.failure.events
+        group: "${spring.application.name}"
+        useNativeDecoding: true
+        
+  ################### DataSource Configuration ##########################
   datasource:
     url: jdbc:postgresql://${DB_URI}:5432/household_db
     username: ${DB_USER:user}
     password: ${DB_USER_PASSWD:password}
+    # HikariCP settings
+    hikari:
+      poolName: HikariPoolMAS
     
 custodial-service:
   url: http://custodian-account/custodian-account/api/v1/accounts/{id}
+  
+service:
+  communication:
+    type: kafka
+
+eureka:
+  client:
+    enabled: true
+  instance:
+    appname: managed-account
+    instanceId: managed-account:${spring.application.instance-id:${random.value}}
+    metadata-map:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/managed-account/actuator/prometheus"
