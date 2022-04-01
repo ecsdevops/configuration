@@ -8,14 +8,11 @@ spring:
   cloud.stream:
     function:
       definition: accountSupplier;custodianFailureEventConsumer;custodianEventConsumer
-    kafka:
-      binder:
-        brokers: 192.168.75.98:29092
     bindings:
       accountSupplier-out-0:
         destination: household.events
         producer:
-          partition-count: 4
+          partition-count: 2
         useNativeEncoding: true
 #      contentType: text/plain
       custodianEventConsumer-in-0:
