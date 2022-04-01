@@ -13,16 +13,12 @@ spring:
         destination: household.events
         producer:
           partition-count: 2
-        useNativeEncoding: true
-#      contentType: text/plain
       custodianEventConsumer-in-0:
         destination: custodian.events
         group: "${spring.application.name}"
-        useNativeDecoding: true
       custodianFailureEventConsumer-in-0:
         destination: custodian.failure.events
         group: "${spring.application.name}"
-        useNativeDecoding: true
         
   ################### DataSource Configuration ##########################
   datasource:
