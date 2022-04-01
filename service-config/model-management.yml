@@ -1,5 +1,34 @@
+project:
+  info:
+    version: "0.0.1-SNAPSHOT"
+    name: "Model Management"
+    description: "This service provides the list of models an advisor is authorized to use for its clients and keeps track of model usage."
+
 spring:
   datasource:
     url: jdbc:postgresql://${DB_URI}:5432/model_db
     username: ${DB_USER:model}
     password: ${DB_USER_PASSWD:password}
+    
+  cloud:
+    stream:
+      function:
+        definition: handleAccountCreation
+      kafka:
+        bindings:
+          handleAccountCreation-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: model-events-dlq
+            producer:
+              valueSerde: StringSerde
+      bindings:
+        handleAccountCreation-in-0:
+          destination: Account.events
+          group: "${spring.application.name}"
+          useNativeDecoding: true
+        accountCreationFailure-in-0:
+          destination: custodian.failure.events
+          group: "${spring.application.name}"
+          useNativeDecoding: true
+    
