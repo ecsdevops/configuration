@@ -20,15 +20,10 @@ spring:
             consumer:
               enableDlq: true
               dlqName: model-events-dlq
-            producer:
-              valueSerde: StringSerde
       bindings:
         handleAccountCreation-in-0:
           destination: Account.events
           group: "${spring.application.name}"
-          useNativeDecoding: true
         accountCreationFailure-in-0:
           destination: custodian.failure.events
           group: "${spring.application.name}"
-          useNativeDecoding: true
-    
