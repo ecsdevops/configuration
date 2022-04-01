@@ -1,5 +1,54 @@
+project:
+  info:
+    version: "0.0.1-SNAPSHOT"
+    name: "Custodial Account Management"
+    description: "This service represents the safe keeping account details and the activities, transactions, holdings against the account."
+    
 spring:
+  cloud:
+    config:
+      discovery:
+        serviceId: config-server
+        enabled: true
+    stream:
+      function:
+        definition: accountCreation
+      kafka:
+        bindings:
+          accountCreation-in-0:
+            consumer:
+              auto-bind-dlq: false
+              enableDlq: false
+              dlqName: custodian-events-dlq
+              dlqPartitions: 1
+            producer:
+              valueSerde: StringSerde
+      bindings:
+        accountCreation-in-0:
+          destination: household.events
+          group: "${spring.application.name}"
+          useNativeDecoding: true
+        accountCreation-out-0:
+          destination: custodian.events
+          producer:
+            partition-count: 4
+          useNativeEncoding: true
   datasource:
     url: jdbc:postgresql://${DB_URI}:5432/custodian_db
     username: ${DB_USER:custodian}
     password: ${DB_USER_PASSWD:password}
+    hikari:
+      poolName: HikariPoolCAMS
+      
+custodian:
+  failure-channel: custodian.failure.events
+  
+eureka:
+  client:
+    enabled: true
+  instance:
+    appname: custodian-account
+    instanceId: custodian-account:${spring.application.instance-id:${random.value}}
+    metadata-map:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/custodian-account/actuator/prometheus"
