@@ -21,18 +21,14 @@ spring:
               enableDlq: false
               dlqName: custodian-events-dlq
               dlqPartitions: 1
-            producer:
-              valueSerde: StringSerde
       bindings:
         accountCreation-in-0:
           destination: household.events
           group: "${spring.application.name}"
-          useNativeDecoding: true
         accountCreation-out-0:
           destination: custodian.events
           producer:
             partition-count: 2
-          useNativeEncoding: true
   datasource:
     url: jdbc:postgresql://${DB_URI}:5432/custodian_db
     username: ${DB_USER:custodian}
