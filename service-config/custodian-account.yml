@@ -21,12 +21,16 @@ spring:
               enableDlq: false
               dlqName: custodian-event-dlq
               dlqPartitions: 1
+            producer:
+              valueSerde: StringSerde              
       bindings:
         accountCreation-in-0:
           destination: household.event
           group: "${spring.application.name}"
+          useNativeDecoding: true
         accountCreation-out-0:
           destination: custodian.event
+          useNativeEncoding: true
 #           producer:
 #             partition-count: 2
   datasource:
