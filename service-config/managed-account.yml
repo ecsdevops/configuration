@@ -11,8 +11,8 @@ spring:
     bindings:
       accountSupplier-out-0:
         destination: household.events
-        producer:
-          partition-count: 2
+#         producer:
+#           partition-count: 2
       custodianEventConsumer-in-0:
         destination: custodian.events
         group: "${spring.application.name}"
