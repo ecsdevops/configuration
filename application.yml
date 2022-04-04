@@ -81,10 +81,10 @@ spring:
           autoCreateTopics: true
           autoAddPartitions: true
           configuration:
-            retries: 1
+#             retries: 1
             batch.size: 16384
             linger.ms: 1
-            enable.idempotence: true
+#             enable.idempotence: true
             buffer.memory: 33554432
             request.timeout.ms: 3000
             transaction.timeout.ms: 3000
@@ -94,8 +94,8 @@ spring:
             commit.retries: 1
             commit.retry.interval: 1000
             session.timeout.ms.config: 50000
-            shutdown.signal: INT,TERM
-            acks: "all"          
+#             shutdown.signal: INT,TERM
+#             acks: "all"          
             "compression.type": "snappy"
             "receive.buffer.bytes": 16000000
             "socket.receive.buffer.bytes": 16000000
