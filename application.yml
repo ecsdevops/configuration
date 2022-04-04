@@ -20,6 +20,7 @@ logging:
         kafka: ERROR
     com:
       assetmark: INFO
+      assetmark.account.filter.JwtRequestFilter: ERROR   
    
 spring:
   main.banner-mode: "off"
