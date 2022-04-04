@@ -27,8 +27,8 @@ spring:
           group: "${spring.application.name}"
         accountCreation-out-0:
           destination: custodian.events
-          producer:
-            partition-count: 2
+#           producer:
+#             partition-count: 2
   datasource:
     url: jdbc:postgresql://${DB_URI}:5432/custodian_db
     username: ${DB_USER:custodian}
