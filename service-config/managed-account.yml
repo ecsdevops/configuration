@@ -10,14 +10,14 @@ spring:
       definition: accountSupplier;custodianFailureEventConsumer;custodianEventConsumer
     bindings:
       accountSupplier-out-0:
-        destination: household.events
+        destination: household.event
 #         producer:
 #           partition-count: 2
       custodianEventConsumer-in-0:
-        destination: custodian.events
+        destination: custodian.event
         group: "${spring.application.name}"
       custodianFailureEventConsumer-in-0:
-        destination: custodian.failure.events
+        destination: custodian.failure.event
         group: "${spring.application.name}"
         
   ################### DataSource Configuration ##########################
