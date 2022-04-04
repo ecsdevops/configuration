@@ -11,14 +11,17 @@ spring:
     bindings:
       accountSupplier-out-0:
         destination: household.event
+        useNativeEncoding: true
 #         producer:
 #           partition-count: 2
       custodianEventConsumer-in-0:
         destination: custodian.event
         group: "${spring.application.name}"
+        useNativeDecoding: true
       custodianFailureEventConsumer-in-0:
         destination: custodian.failure.event
         group: "${spring.application.name}"
+        useNativeDecoding: true
         
   ################### DataSource Configuration ##########################
   datasource:
