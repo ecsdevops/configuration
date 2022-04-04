@@ -19,14 +19,14 @@ spring:
             consumer:
               auto-bind-dlq: false
               enableDlq: false
-              dlqName: custodian-events-dlq
+              dlqName: custodian-event-dlq
               dlqPartitions: 1
       bindings:
         accountCreation-in-0:
-          destination: household.events
+          destination: household.event
           group: "${spring.application.name}"
         accountCreation-out-0:
-          destination: custodian.events
+          destination: custodian.event
 #           producer:
 #             partition-count: 2
   datasource:
@@ -37,7 +37,7 @@ spring:
       poolName: HikariPoolCAMS
       
 custodian:
-  failure-channel: custodian.failure.events
+  failure-channel: custodian.failure.event
   
 eureka:
   client:
