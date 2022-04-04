@@ -25,5 +25,5 @@ spring:
           destination: Account.events
           group: "${spring.application.name}"
         accountCreationFailure-in-0:
-          destination: custodian.failure.events
+          destination: custodian.failure.event
           group: "${spring.application.name}"
