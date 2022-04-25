@@ -1,0 +1,13 @@
+project:
+  info:
+    version: "0.0.1-SNAPSHOT"
+    name: "Account Composer Service"
+    description: "This service represents the safe keeping account details and the activities, transactions, holdings against the account"
+
+ 
+service:
+  uri:
+    managedAccount: "http://192.168.45.11:30804/managed-account/api/households/"
+    custodianAccount: "http://192.168.45.11:30845/custodian-account/api/v1/accounts/"
+    modelManagement: "http://192.168.45.11:30805/model-management/models/"
+    self: "http://192.168.45.11:30975/account-composer/api/v1/"
