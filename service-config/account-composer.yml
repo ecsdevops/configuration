@@ -11,3 +11,22 @@ service:
     custodianAccount: "http://192.168.45.11:30845/custodian-account/api/v1/accounts/"
     modelManagement: "http://192.168.45.11:30805/model-management/models/"
     self: "http://192.168.45.11:30975/account-composer/api/v1/"
+
+spring:
+  hateoas:
+    use-hal-as-default-json-media-type: false
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            token-uri: ${KEYCLOAK_REALM_URI}/protocol/openid-connect/token
+            issuerUri: ${KEYCLOAK_REALM_URI}
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_CLIENT_ID}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+            authorization-grant-type: password
+            scope: openid
+            username: admin
+            password: admin        
