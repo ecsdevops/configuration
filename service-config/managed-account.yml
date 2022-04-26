@@ -37,7 +37,7 @@ custodial-service:
   
 service:
   communication:
-    type: kafka
+    type: rest
 
 eureka:
   client:
