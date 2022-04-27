@@ -8,7 +8,7 @@ project:
 service:
   uri:
     managedAccount: "http://20.81.59.94:8040/managed-account/api/households/"
-    custodianAccount: "http://20.81.87.135:8045/custodian-account/api/v1/accounts/"
+    custodianAccount: "http://20.232.216.168:8045/custodian-account/api/v1/accounts/"
     modelManagement: "http://52.226.252.91:8050/model-management/models/"
     self: "http://20.88.163.242:8075/account-composer/api/v1/"
 
