@@ -27,13 +27,13 @@ spring:
   output.ansi.enabled: ALWAYS
   zipkin:
     base-url: http://zipkin-service:9411
-    enabled: true
+    enabled: false
     sender.type: web
     locator:
       discovery:
         enabled: true
   sleuth:
-    enabled: true
+    enabled: false
     sampler:
       probability: 1.0
   date-time:
