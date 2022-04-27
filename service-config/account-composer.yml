@@ -7,10 +7,10 @@ project:
  
 service:
   uri:
-    managedAccount: "http://192.168.45.11:30804/managed-account/api/households/"
-    custodianAccount: "http://192.168.45.11:30845/custodian-account/api/v1/accounts/"
-    modelManagement: "http://192.168.45.11:30805/model-management/models/"
-    self: "http://192.168.45.11:30975/account-composer/api/v1/"
+    managedAccount: "http://20.81.59.94:8040/managed-account/api/households/"
+    custodianAccount: "http://20.81.87.135:8045/custodian-account/api/v1/accounts/"
+    modelManagement: "http://52.226.252.91:8050/model-management/models/"
+    self: "http://20.88.163.242:8075/account-composer/api/v1/"
 
 spring:
   hateoas:
